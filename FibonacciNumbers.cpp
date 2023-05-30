@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include <chrono>
 
 void mul(int matrix1[2][2], int matrix2[2][2]) {
@@ -36,30 +37,62 @@ int fibonacci(int n) {
 	return fibonacci(n - 2) + fibonacci(n - 1);
 }
 
+int fibonacci_with_extra_memory(int n) {
+	static std::vector<int> helper = {0, 1, 1};
+	if (n <= 2) { return 1; }
+	if (helper.size() <= n) {
+		while ((helper.size() - 1) != n) {
+			helper.push_back(helper[helper.size() - 1] + helper[helper.size() - 2]);
+		}
+	}
+	return helper[n];
+}
+
 int main() {
 	std::cout << "Enter number of Fibonacci: ";
 	int n;
 	std::cin >> n;
 	if (n < 0) {
-		std::cout << "Error!! : Invalid input parameter\n";
+		std::cout << "Error!! | Invalid input parameter\n";
 		return {};
 	}
+
 	std::cout << std::endl;
 	auto start_time = std::chrono::steady_clock::now();
-	std::cout << "Result is(with using matrix): " << fibonacci_with_matrix(n);	
-	std::cout << std::endl;
+	std::cout << "Result is(with using matrix): " << fibonacci_with_matrix(n) 
+		<< std::endl;
 	auto end_time = std::chrono::steady_clock::now();
-	std::cout << "Amazing time is : ";
+	std::cout << "Amazing time is: ";
 	std::cout << std::chrono::duration_cast<std::chrono::nanoseconds>(end_time - start_time).count() 
 		<< " nanoseconds\n";
+
 	std::cout << std::endl;
 	auto start_time1 = std::chrono::steady_clock::now();
-	std::cout << "Result is: " << fibonacci(n);
-	std::cout << std::endl;
+	std::cout << "Result is: " << fibonacci(n) << std::endl;
 	auto end_time1 = std::chrono::steady_clock::now();
-	std::cout << "Amazing time is : ";
+	std::cout << "Amazing time is: ";
 	std::cout << std::chrono::duration_cast<std::chrono::nanoseconds>(end_time1 - start_time1).count() 
 		<< " nanoseconds\n";
+
+	std::cout << std::endl;
+	std::cout << "First entry" << std::endl;
+  auto start_time2 = std::chrono::steady_clock::now();
+	std::cout << "Result is(with extra memory): " << fibonacci_with_extra_memory(n) 
+		<< std::endl;
+  auto end_time2 = std::chrono::steady_clock::now();
+	std::cout << "Amazing time is: ";
+  std::cout << std::chrono::duration_cast<std::chrono::nanoseconds>(end_time2 - start_time2).count()
+    << " nanoseconds\n";
+	
+	std::cout << std::endl;
+	std::cout << "Second entry, number = " << n - 2 << std::endl;
+	auto start_time3 = std::chrono::steady_clock::now();
+  std::cout << "Result is(with extra memory): " << fibonacci_with_extra_memory(n - 2)
+    << std::endl;
+  auto end_time3 = std::chrono::steady_clock::now();
+  std::cout << "Amazing time is: ";
+  std::cout << std::chrono::duration_cast<std::chrono::nanoseconds>(end_time3 - start_time3).count()
+    << " nanoseconds\n";
 
 	return {};
 }
